@@ -1,0 +1,33 @@
+"""function for checking if a sentence without whitespaces is valid or not"""
+
+dictionary = (['i', 'ice', 'cream', 'icecream', 'in', 'input', 'putter', 'sand', 'and', 'witch', 'a', 'cute', 'dog'])
+
+
+def is_valid_word(word):
+    if word in dictionary:
+        return True
+    return False
+
+
+def is_valid_sentence(sentence):
+    if is_valid_word(sentence):
+        return True
+    else:
+        offset = 1
+        while offset < len(sentence):
+            if is_valid_sentence(sentence[:offset]) and is_valid_sentence(sentence[offset:]):
+                return True
+            offset += 1
+    return False
+
+
+def valid_sentence():
+    sentence = 'icecreamsandwitch'
+    if is_valid_sentence(sentence):
+        print 'Sentence ' + sentence + ' is VALID!!!'
+    else:
+        print 'Sentence ' + sentence + ' is INVALID!!!'
+
+
+if __name__ == '__main__':
+    valid_sentence()

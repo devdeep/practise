@@ -1,0 +1,70 @@
+"""Checks if a phone number can make a valid english sentence or word"""
+
+import sys
+
+number_to_letter_map = [[], [], ['a', 'b', 'c'], ['d', 'e', 'f'], ['g', 'h', 'i'],
+                        ['j', 'k', 'l'], ['m', 'n', 'o'], ['p', 'q', 'r', 's'],
+                        ['t', 'u', 'v'], ['w', 'x', 'y', 'z']]
+
+
+dictionary = (['i', 'ice', 'cream', 'icecream', 'in', 'input', 'putter', 'sand', 'and', 'witch', 'a'])
+
+
+def is_valid_word(word):
+    if word in dictionary:
+        return True
+    return False
+
+def is_valid_word_number(number):
+    all_words = ([])
+    offset = 0
+    while offset < len(number):
+        if len(all_words) == 0:
+            for one_letter in number_to_letter_map[int(number[offset])]:
+                all_words.append(one_letter)
+        else:
+            all_new_words = ([])
+            for one_letter in number_to_letter_map[int(number[offset])]:
+                for one_word in all_words:
+                    all_new_words.append(one_word + one_letter)
+            all_words = all_new_words
+        offset += 1
+
+    for one_word in all_words:
+        if is_valid_word(one_word):
+            return True
+
+    return False
+
+
+def valid_phone_number(number_to_validate):
+    if is_valid_word_number(number_to_validate):
+        return True
+    else:
+        offset = 1
+        while offset < len(number_to_validate):
+            if valid_phone_number(number_to_validate[:offset]) and valid_phone_number(number_to_validate[offset:]):
+                return True
+            offset += 1
+    return False
+
+def initialize_dictionary():
+    dict_file = open('dictionary.txt', 'r')
+    one_word = dict_file.readline().strip('\n')
+    while len(one_word) > 0:
+        dictionary.append(one_word)
+        one_word = dict_file.readline().strip('\n')
+
+
+def is_number_valid():
+    initialize_dictionary()
+    number = sys.argv[1]
+    print 'Checking if ' + number + ' is valid or not'
+    if valid_phone_number(number):
+        print number + ' is a VALID string'
+    else:
+        print number + ' is an INVALID string'
+
+
+if __name__ == '__main__':
+    is_number_valid()
